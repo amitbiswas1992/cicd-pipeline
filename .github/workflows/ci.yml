@@ -2,6 +2,10 @@ name: CI Pipeline
 
 on:
   push:
+    branches: 
+      - "main"
+      - "**"  # This will make it run on all branches
+  pull_request:
     branches: [ "main" ]
 
 jobs:
@@ -19,6 +23,8 @@ jobs:
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       
     - name: Build the Docker image
-      run: docker build -t amitslab/cicd-pipeline .
+      run: docker build -t amitslab/cicd-pipeline:${{ github.sha }} -t amitslab/cicd-pipeline:latest .
     - name: Push to Dockerhub
-      run: docker push amitslab/cicd-pipeline:latest
+      run: |
+        docker push amitslab/cicd-pipeline:${{ github.sha }}
+        docker push amitslab/cicd-pipeline:latest
