@@ -19,3 +19,13 @@ jobs:
       run: sudo docker rm -f cicd-pipeline-container || true
     - name: Run Docker Container
       run: sudo docker run -d -p 8080:8080 --name cicd-pipeline-container amitslab/cicd-pipeline
+
+
+username: devops_user
+password: 
+  - password01: 
+    - password01
+  - password02
+  - password03
+timeout: 30
+enable_feature: true
