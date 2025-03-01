@@ -7,17 +7,14 @@ on:
       - completed
 
 jobs:
-
   build:
-
     runs-on: self-hosted
-
     steps:
-    - name: Pull Docker image
-      run: sudo docker pull amitslab/cicd-pipeline:latest
+      - name: Pull Docker image
+        run: sudo docker pull amitslab/cicd-pipeline:latest
 
-    - name: Delete Old docker container
-      run: sudo docker rm -f cicd-pipeline-container || true
+      - name: Delete Old docker container
+        run: sudo docker rm -f cicd-pipeline-container || true
 
-    - name: Run Docker Container
-      run: sudo docker run -d -p 8080:8080 --name cicd-pipeline-container amitslab/cicd-pipeline
+      - name: Run Docker Container
+        run: sudo docker run -d -p 8080:8080 --name cicd-pipeline-container amitslab/cicd-pipeline
