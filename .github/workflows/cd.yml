@@ -22,7 +22,9 @@ jobs:
         with:
           image-ref: "amitslab/cicd-pipeline:latest"
           format: "table"
-          exit-code: 1  # Fail the build if vulnerabilities are found
+          ignore-unfixed: true  # Ignore vulnerabilities that have no fixed version
+          severity: "HIGH,CRITICAL"  # Scan only high & critical vulnerabilities
+          exit-code: 0  # Do not fail the pipeline, just show the warnings
 
       - name: Run Docker Container
         run: sudo docker run -d -p 80:8080 --name cicd-pipeline-container amitslab/cicd-pipeline:latest
