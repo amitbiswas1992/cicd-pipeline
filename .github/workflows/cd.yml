@@ -11,22 +11,103 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Pull Docker image
-        run: sudo docker pull amitslab/cicd-pipeline:latest
+        run: docker pull amitslab/cicd-pipeline:latest
 
       - name: Delete Old docker container
-        run: sudo docker rm -f cicd-pipeline-container || true
+        run: docker rm -f cicd-pipeline-container || true
 
-        # 🔐 Security Scan with Trivy
       - name: Security Scan with Trivy
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: "amitslab/cicd-pipeline:latest"
-          format: "table"
-          ignore-unfixed: true  # Ignore vulnerabilities that have no fixed version
-          severity: "HIGH,CRITICAL"  # Scan only high & critical vulnerabilities
-          exit-code: 0  # Do not fail the pipeline, just show the warnings
+        format: "table"
+        ignore-unfixed: true  # Ignore vulnerabilities that have no fixed version
+        severity: "HIGH,CRITICAL"  # Scan only high & critical vulnerabilities
+        exit-code: 0  # Do not fail the pipeline, just show the warnings
 
       - name: Run Docker Container
-        run: sudo docker run -d -p 80:8080 --name cicd-pipeline-container amitslab/cicd-pipeline:latest
+        run: docker run -d -p 8080:8080 --name cicd-pipeline-container amitslab/cicd-pipeline
 
-        
+      - name: Send Slack Notification (Success)
+        if: success()
+        run: |
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          curl -X POST -H 'Content-type: application/json' --data '{
+            "blocks": [
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Ref*\n${{ github.ref }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Event*\n${{ github.event_name }}"
+                  }
+                ]
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Actions URL*\nCD Pipeline"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Commit*\n'"${SHORT_SHA}"'"
+                  }
+                ]
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "✅ CD Deployment Successful!\n:tada: The deployment for *amitslab/cicd-pipeline* was successful! :white_check_mark:"
+                }
+              }
+            ]
+          }' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Send Slack Notification (Failure)
+        if: failure()
+        run: |
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          curl -X POST -H 'Content-type: application/json' --data '{
+            "blocks": [
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Ref*\n${{ github.ref }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Event*\n${{ github.event_name }}"
+                  }
+                ]
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Actions URL*\nCD Pipeline"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Commit*\n'"${SHORT_SHA}"'"
+                  }
+                ]
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "❌ CD Deployment Failed!\n:warning: The deployment for *amitslab/cicd-pipeline* failed! Check GitHub Actions logs."
+                }
+              }
+            ]
+          }' ${{ secrets.SLACK_WEBHOOK_URL }}
