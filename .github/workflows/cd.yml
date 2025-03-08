@@ -38,7 +38,7 @@ jobs:
                 "fields": [
                   {
                     "type": "mrkdwn",
-                    "text": "*Ref*\n${{ github.ref }}"
+                    "text": "*Ref*\n<https://github.com/amitbiswas1992/cicd-pipeline/tree/${{ github.ref_name }}|${{ github.ref }}>"
                   },
                   {
                     "type": "mrkdwn",
@@ -51,11 +51,11 @@ jobs:
                 "fields": [
                   {
                     "type": "mrkdwn",
-                    "text": "*Actions URL*\nCD Pipeline"
+                    "text": "*Actions URL*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|CD Pipeline>"
                   },
                   {
                     "type": "mrkdwn",
-                    "text": "*Commit*\n'"${SHORT_SHA}"'"
+                    "text": "*Commit*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${SHORT_SHA}>"
                   }
                 ]
               },
@@ -63,7 +63,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "✅ CD Deployment Successful!\n:tada: The deployment for *amitslab/cicd-pipeline* was successful! :white_check_mark:"
+                  "text": "✅ CD Deployment Successful!\n:tada: The deployment for *amitbiswas1992/cicd-pipeline* was successful! :white_check_mark:"
                 }
               }
             ]
@@ -80,7 +80,7 @@ jobs:
                 "fields": [
                   {
                     "type": "mrkdwn",
-                    "text": "*Ref*\n${{ github.ref }}"
+                    "text": "*Ref*\n<https://github.com/amitbiswas1992/cicd-pipeline/tree/${{ github.ref_name }}|${{ github.ref }}>"
                   },
                   {
                     "type": "mrkdwn",
@@ -93,11 +93,11 @@ jobs:
                 "fields": [
                   {
                     "type": "mrkdwn",
-                    "text": "*Actions URL*\nCD Pipeline"
+                    "text": "*Actions URL*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|CD Pipeline>"
                   },
                   {
                     "type": "mrkdwn",
-                    "text": "*Commit*\n'"${SHORT_SHA}"'"
+                    "text": "*Commit*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${SHORT_SHA}>"
                   }
                 ]
               },
@@ -105,7 +105,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "❌ CD Deployment Failed!\n:warning: The deployment for *amitslab/cicd-pipeline* failed! Check GitHub Actions logs."
+                  "text": "❌ CD Deployment Failed!\n:warning: The deployment for *amitbiswas1992/cicd-pipeline* failed! Check GitHub Actions logs."
                 }
               }
             ]
